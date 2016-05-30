@@ -57,7 +57,7 @@ module.exports = function(robot) {
     var summary = '\n*Summary:*\n';
 
     async.each(users, function(user, done) {
-      var url = 'https://' + zendeskDomain + '.zendesk.com/api/v2/search.json?query="type:ticket status:open tags:' + user.zendeskTag + '"';
+      var url = 'https://' + zendeskDomain + '.zendesk.com/api/v2/search.json?query=type:ticket status:open tags:' + user.zendeskTag;
 
       robot
         .http(url)
@@ -70,11 +70,16 @@ module.exports = function(robot) {
           if (ticketCount > 0) {
             message = 'Hi ' + user.name + '! There are `' + ticketCount + '` developer support tickets waiting for <https://' + zendeskDomain + '.zendesk.com/agent/filters/' + user.zendeskView + '|you>. :hugging_face:\n';
 
-            jsonResponse.tickets.forEach(function(ticket, index) {
+            jsonResponse.results.forEach(function(ticket, index) {
+              var ticketUrl = 'https://ppay.zendesk.com/agent/tickets/' + ticket.id;
+              var ticketSubject = ticket.subject;
+              var ticketUpdatedAt = ticket.updated_at;
+
               var now = new Date().getTime();
-              var ticketUpdateTime = new Date(ticket.updated_at).getTime();
-              var hoursAgo = Math.abs((now - ticketUpdateTime) / (60*60*1000));
-              message = '<' + ticket.url + '|' + ticket.subject + '> - :timer_clock: ' + hoursAgo + ' hrs\n';
+              var ticketUpdateTime = new Date(ticketUpdatedAt).getTime();
+              var hoursAgo = Math.floor((now - ticketUpdateTime) / (60*60*1000));
+
+              message += '<' + ticketUrl + '|' + ticketSubject + '> - :timer_clock: ' + hoursAgo + ' hrs\n';
             });
           } else {
             // message = 'Hi ' + user.name + '! You have no tickets! :thumbsup:';
