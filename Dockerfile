@@ -1,28 +1,28 @@
-FROM ubuntu
+FROM node:latest
 
-RUN apt-get update
-RUN apt-get -y install curl
-# Grab the current latest version of Node.js and copy to /usr
-RUN curl -LO https://nodejs.org/dist/v4.1.2/node-v4.1.2-linux-x64.tar.gz && tar zxvf node-v4.1.2-linux-x64.tar.gz && /bin/bash -c "cp -a node-v4.1.2-linux-x64/{bin,include,lib,share} /usr" && rm node-v4.1.2-linux-x64.tar.gz
-
-# Add a user to run Hubot
-RUN useradd -ms /bin/bash hubot
-
-# Fetch the packages required to generate our Hubot
-RUN npm -g install yo generator-hubot
-
-# Switch to the user we created
-USER hubot
-RUN cd /home/hubot && mkdir hubot
-WORKDIR /home/hubot/hubot
-
-# Generate our Hubot -- configure this as needed
-RUN yo hubot --owner "Owner <rj@promisepay.com>" --name sirmcfaulian --adapter slack --defaults
+# Setup a directory for our app
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
 # Add our run script to make it easier to run through ECS
-ADD run_hubot.sh /home/hubot/hubot/run_hubot.sh
+ADD run_hubot.sh /usr/src/app/
 
 # Add package.json and external-scripts.json so we can customize them at build time
-ADD package.json /home/hubot/hubot/package.json
-ADD external-scripts.json /home/hubot/hubot/external-scripts.json
+ADD package.json /usr/src/app/
+ADD external-scripts.json /usr/src/app/
+
+# Fetch the packages required to generate our Hubot
 RUN npm install
+RUN npm install yo generator-hubot
+
+# Bundle app source
+COPY . /usr/src/app
+
+EXPOSE 80 443
+ENV HUBOT_SLACK_TOKEN xoxb-44200729191-UTPD7ZAqVkYVukgRZ10YXmk1
+ENV HUBOT_ADAPTER slack
+# Generate our Hubot -- configure this as needed
+# CMD yo hubot --owner "Owner <rj@promisepay.com>" --name sirmcfaulian --adapter slack --defaults
+CMD [ "./bin/hubot" ]
+ #, "--adapter", "slack" ]
+# CMD bin/hubot
