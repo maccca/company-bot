@@ -8,7 +8,14 @@ var auth = 'Basic ' + new Buffer(username + ':' + password).toString('base64');
 
 module.exports = function(robot) {
     robot.respond(/hi|hello|help/i, function(res) {
-        res.reply("Greetings! Let me help you!\n`czech` - Check in with all the Specialists.\n`report` - Report all tickets for Specialists.");
+        var commands = [
+          "Greetings! Let me help you!",
+          "`czech` - Check in with all the Specialists.",
+          "`report` - Report all tickets for Specialists.",
+          "`show` - Show agent's outstanding tickets (DM only)"
+        ];
+
+        res.reply(commands.join('\n'));
     });
 
     robot.respond(/report/i, function(res) {
