@@ -41,7 +41,6 @@ module.exports = function(robot) {
                     var now = new Date().getTime();
                     var ticketUpdateTime = new Date(ticketUpdatedAt).getTime();
                     var hoursAgo = Math.floor((now - ticketUpdateTime) / (60 * 60 * 1000));
-                    totalHours += hoursAgo;
                     message += count + ') <' + ticketUrl + '|' + ticketSubject + '> - :timer_clock: ' + hoursAgo + ' hrs\n';
                     count += 1;
                 });
