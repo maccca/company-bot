@@ -1,5 +1,4 @@
 var dotenv = require('dotenv').config();
-var async = require('async');
 
 var username = process.env.ZENDESK_USERNAME;
 var password = process.env.ZENDESK_PASSWORD;
