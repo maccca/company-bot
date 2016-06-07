@@ -26,4 +26,3 @@ ENV HUBOT_ADAPTER slack
 CMD [ "./bin/hubot" ]
  #, "--adapter", "slack" ]
 # CMD bin/hubot
-
