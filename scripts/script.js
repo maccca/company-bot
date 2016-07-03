@@ -25,7 +25,7 @@ module.exports = function(robot) {
         report(res, false, false);
     });
 
-    robot.respond(/report-urgent/i, function(res) {
+    robot.respond(/urgent-report/i, function(res) {
         res.reply('Messaging a report of all urgent ZenDesk tickets.');
         report(res, false, true);
     });
@@ -35,7 +35,7 @@ module.exports = function(robot) {
         report(res, true, false);
     });
 
-    robot.respond(/czechin-urgent|checkin-urgent|check-urgent/i, function(res) {
+    robot.respond(/urgent-czechin|urgent-checkin|urgent-check/i, function(res) {
         res.reply('Messaging a break-down of ZenDesk tickets to each of the Integration Support specialists.');
         report(res, true, true);
     });
@@ -205,6 +205,5 @@ module.exports = function(robot) {
             zendeskView: process.env.USER6_ZENDESK_VIEW,
             zendeskTag: process.env.USER6_ZENDESK_TAG
         }];
-    });
-}
+    };
 }
